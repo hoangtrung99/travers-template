@@ -10,7 +10,7 @@ import type { MachineEvent } from './mock-data'
 import {
   calculateEventStartPosition,
   calculateEventStyle,
-  getCellCount
+  getEventDurationCellCount
 } from './utils'
 
 const EventBox = ({
@@ -26,8 +26,8 @@ const EventBox = ({
     null
   )
 
-  const cellCount = getCellCount(event)
-  const leftPosition = calculateEventStartPosition(event)
+  const cellCount = getEventDurationCellCount(event)
+  const leftPosition = calculateEventStartPosition(event.from)
   const eventStyle = calculateEventStyle(cellCount, isDragging)
 
   useEffect(() => {

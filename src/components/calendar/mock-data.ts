@@ -3,6 +3,7 @@ export interface MachineEvent {
   from: string
   to: string
   title: string
+  team_id: string
 }
 
 export interface Team {
@@ -20,13 +21,15 @@ export const teams: Team[] = [
         id: 'event1',
         from: '2024-12-02 08:00:00',
         to: '2024-12-03 12:00:00',
-        title: 'テスト1'
+        title: 'テスト1',
+        team_id: 'team1'
       },
       {
         id: 'event2',
         from: '2024-12-06 13:00:00',
         to: '2024-12-08 17:00:00',
-        title: 'テスト2'
+        title: 'テスト2',
+        team_id: 'team1'
       }
     ]
   },
@@ -38,7 +41,8 @@ export const teams: Team[] = [
         id: 'event3',
         from: '2024-12-05 08:00:00',
         to: '2024-12-06 12:00:00',
-        title: 'テスト3'
+        title: 'テスト3',
+        team_id: 'team2'
       }
     ]
   },
@@ -50,7 +54,8 @@ export const teams: Team[] = [
         id: 'event4',
         from: '2024-12-04 08:00:00',
         to: '2024-12-05 17:00:00',
-        title: 'テスト4'
+        title: 'テスト4',
+        team_id: 'team3'
       }
     ]
   },
@@ -62,7 +67,8 @@ export const teams: Team[] = [
         id: 'event5',
         from: '2024-12-10 13:00:00',
         to: '2024-12-12 12:00:00',
-        title: 'テスト5'
+        title: 'テスト5',
+        team_id: 'team4'
       }
     ]
   },
@@ -74,7 +80,8 @@ export const teams: Team[] = [
         id: 'event6',
         from: '2024-12-08 08:00:00',
         to: '2024-12-09 17:00:00',
-        title: 'テスト6'
+        title: 'テスト6',
+        team_id: 'team5'
       }
     ]
   },
@@ -86,7 +93,8 @@ export const teams: Team[] = [
         id: 'event7',
         from: '2024-12-15 08:00:00',
         to: '2024-12-16 12:00:00',
-        title: 'テスト7'
+        title: 'テスト7',
+        team_id: 'team6'
       }
     ]
   },
@@ -98,7 +106,8 @@ export const teams: Team[] = [
         id: 'event8',
         from: '2024-12-13 13:00:00',
         to: '2024-12-15 17:00:00',
-        title: 'テスト8'
+        title: 'テスト8',
+        team_id: 'team7'
       }
     ]
   },
@@ -110,7 +119,8 @@ export const teams: Team[] = [
         id: 'event9',
         from: '2024-12-18 08:00:00',
         to: '2024-12-19 12:00:00',
-        title: 'テスト9'
+        title: 'テスト9',
+        team_id: 'team8'
       }
     ]
   },
@@ -122,7 +132,8 @@ export const teams: Team[] = [
         id: 'event10',
         from: '2024-12-20 13:00:00',
         to: '2024-12-22 17:00:00',
-        title: 'テスト10'
+        title: 'テスト10',
+        team_id: 'team9'
       }
     ]
   },
@@ -134,7 +145,8 @@ export const teams: Team[] = [
         id: 'event11',
         from: '2024-12-25 08:00:00',
         to: '2024-12-26 12:00:00',
-        title: 'テスト11'
+        title: 'テスト11',
+        team_id: 'team10'
       }
     ]
   }

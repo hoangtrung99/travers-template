@@ -9,8 +9,9 @@ const BorderedBox = forwardRef<
     ref={ref}
     {...props}
     style={{
-      borderRight: '1px solid black',
-      borderBottom: '1px solid black',
+      border: '1px solid black',
+      borderBottom: 'none',
+      borderLeft: 'none',
       ...props.style
     }}
   >

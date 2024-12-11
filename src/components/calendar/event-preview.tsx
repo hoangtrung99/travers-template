@@ -2,7 +2,7 @@ import { Box, Text } from '@mantine/core'
 import { CELL_HEIGHT, CELL_WIDTH } from './constants'
 import { EVENT_BOX_PADDING } from './constants'
 import type { MachineEvent } from './mock-data'
-import { getCellCount } from './utils'
+import { getEventDurationCellCount } from './utils'
 
 const EventPreview = ({
   event,
@@ -11,7 +11,7 @@ const EventPreview = ({
   event: MachineEvent
   style?: React.CSSProperties
 }) => {
-  const cellCount = getCellCount(event)
+  const cellCount = getEventDurationCellCount(event)
 
   return (
     <Box

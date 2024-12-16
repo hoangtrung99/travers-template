@@ -12,9 +12,10 @@ import BorderedBox from './border-box'
 import CalenderHeader from './calendar-header'
 import { CELL_HEIGHT, CELL_TEAM_WIDTH, CELL_WIDTH } from './constants'
 import EventBox from './event-box'
+import EventPreview from './event-preview'
 import { type MachineEvent, teams as mockTeams } from './mock-data'
 import {
-  calculateEndCellNumber,
+  calculateEventStartPositionByCellNumber,
   getEventDurationCellCount,
   getNewEventPosition
 } from './utils'
@@ -176,19 +177,6 @@ function CalendarBody({
     }
   }, [teamId])
 
-  const shouldHighlightCell = (cellNumber: number) => {
-    if (!dropTarget) return false
-
-    const startCellIndex = dropTarget.targetCellNumber
-    const durationCellCount = getEventDurationCellCount(dropTarget.event)
-    const endCellIndex = calculateEndCellNumber(
-      startCellIndex,
-      durationCellCount
-    )
-
-    return cellNumber >= startCellIndex && cellNumber <= endCellIndex
-  }
-
   return (
     <Box pos="relative" w="max-content">
       <Flex>
@@ -222,11 +210,6 @@ function CalendarBody({
                 ref={(el: HTMLDivElement | null) => {
                   cellRefs.current[cells[0]] = el
                 }}
-                style={{
-                  backgroundColor: shouldHighlightCell(cells[0])
-                    ? '#e3f2fd'
-                    : undefined
-                }}
               >
                 {cells[0]}
               </BorderedBox>
@@ -235,11 +218,6 @@ function CalendarBody({
                 h={CELL_HEIGHT}
                 ref={(el: HTMLDivElement | null) => {
                   cellRefs.current[cells[1]] = el
-                }}
-                style={{
-                  backgroundColor: shouldHighlightCell(cells[1])
-                    ? '#e3f2fd'
-                    : undefined
                 }}
               >
                 {cells[1]}
@@ -260,23 +238,21 @@ function CalendarBody({
       >
         <Box style={{ pointerEvents: 'auto' }}>
           {events.map((event) => (
-            <EventBox
-              key={`${event.from}-${event.to}`}
-              event={event}
-              columnStart={localeDayjs(event.from).date()}
-            />
+            <EventBox key={`${event.from}-${event.to}`} event={event} />
           ))}
-          {/* {dropTarget && (
+          {dropTarget && (
             <EventPreview
               event={dropTarget.event}
               style={{
                 position: 'absolute',
-                left: `${(dropTarget.cellNumber / 2) * CELL_WIDTH * 2 + CELL_TEAM_WIDTH}px`,
+                left: calculateEventStartPositionByCellNumber(
+                  dropTarget.targetCellNumber
+                ),
                 opacity: 0.7,
                 pointerEvents: 'none'
               }}
             />
-          )} */}
+          )}
         </Box>
       </Box>
     </Box>

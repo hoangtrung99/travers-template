@@ -8,17 +8,15 @@ import { EVENT_BOX_PADDING } from './constants'
 import EventPreview from './event-preview'
 import type { MachineEvent } from './mock-data'
 import {
-  calculateEventStartPosition,
+  calculateEventStartPositionByDay,
   calculateEventStyle,
   getEventDurationCellCount
 } from './utils'
 
 const EventBox = ({
-  event,
-  columnStart
+  event
 }: {
   event: MachineEvent
-  columnStart: number
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -27,7 +25,7 @@ const EventBox = ({
   )
 
   const cellCount = getEventDurationCellCount(event)
-  const leftPosition = calculateEventStartPosition(event.from)
+  const leftPosition = calculateEventStartPositionByDay(event.from)
   const eventStyle = calculateEventStyle(cellCount, isDragging)
 
   useEffect(() => {
@@ -35,7 +33,7 @@ const EventBox = ({
 
     const cleanup = draggable({
       element: ref.current,
-      getInitialData: () => ({ event, columnStart }),
+      getInitialData: () => ({ event }),
       onDragStart: () => setIsDragging(true),
       onDrop: () => {
         setIsDragging(false)
@@ -53,7 +51,7 @@ const EventBox = ({
     })
 
     return cleanup
-  }, [event, columnStart])
+  }, [event])
 
   return (
     <>

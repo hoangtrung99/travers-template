@@ -38,12 +38,17 @@ export const calculateCellCount = (
   return cellCount
 }
 
-export const calculateEventStartPosition = (from: string) => {
+export const calculateEventStartPositionByDay = (from: string) => {
   const startPos = getEventPosition(from)
   const additionLeftPosition = startPos.isAfternoon ? CELL_WIDTH : 0
   const leftPosition = (startPos.day - 1) * COL_WIDTH + CELL_TEAM_WIDTH
   // if start is afternoon, add 1 cell width
   return leftPosition + additionLeftPosition
+}
+
+export const calculateEventStartPositionByCellNumber = (cellNumber: number) => {
+  const newFrom = getNewEventFromByCellNumber(cellNumber)
+  return calculateEventStartPositionByDay(newFrom)
 }
 
 export const getDayFromCellNumber = (cellNumber: number) => {
@@ -71,7 +76,7 @@ export const getNewEventPosition = (
   eventDurationCellCount: number,
   targetCellNumber: number
 ) => {
-  const newFrom = getNewEventStartDayByCellNumber(targetCellNumber)
+  const newFrom = getNewEventFromByCellNumber(targetCellNumber)
 
   const startCellNumber = getStartCellNumberByDay(newFrom)
   const endCellNumber = calculateEndCellNumber(
@@ -79,7 +84,7 @@ export const getNewEventPosition = (
     eventDurationCellCount
   )
 
-  const newTo = getNewEventEndDayByCellNumber(endCellNumber)
+  const newTo = getNewEventToByCellNumber(endCellNumber)
 
   return {
     newFrom,
@@ -87,7 +92,7 @@ export const getNewEventPosition = (
   }
 }
 
-export const getNewEventStartDayByCellNumber = (cellNumber: number) => {
+export const getNewEventFromByCellNumber = (cellNumber: number) => {
   const newDay = getDayFromCellNumber(cellNumber)
   const isAfternoon = isAfternoonCell(cellNumber)
   const newFrom = localeDayjs()
@@ -100,7 +105,7 @@ export const getNewEventStartDayByCellNumber = (cellNumber: number) => {
   return newFrom
 }
 
-export const getNewEventEndDayByCellNumber = (endCellNumber: number) => {
+export const getNewEventToByCellNumber = (endCellNumber: number) => {
   const endDay = getDayFromCellNumber(endCellNumber)
   const isAfternoon = isAfternoonCell(endCellNumber)
 

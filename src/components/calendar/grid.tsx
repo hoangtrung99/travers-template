@@ -31,6 +31,8 @@ export default function CalendarGrid() {
       }),
       monitorForElements({
         onDrop: ({ source, location }) => {
+          if (source.data.type === 'divider') return
+
           const targetData = location.current.dropTargets[0].data
           const event = source.data.event as MachineEvent
           const teamId = targetData.teamId as string

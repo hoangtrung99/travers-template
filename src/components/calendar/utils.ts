@@ -1,4 +1,5 @@
 import localeDayjs from '@/lib/dayjs'
+import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types'
 import {
   CELL_HEIGHT,
   CELL_TEAM_WIDTH,
@@ -6,11 +7,13 @@ import {
   COL_WIDTH,
   END_TIME_AFTERNOON,
   END_TIME_MORNING,
+  EVENT_BOX_MAX_WIDTH,
+  EVENT_BOX_MIN_WIDTH,
   EVENT_BOX_PADDING,
   START_TIME_AFTERNOON,
   START_TIME_MORNING
 } from './constants'
-import type { MachineEvent } from './mock-data'
+import type { MachineEvent } from './types'
 
 export const getEventPosition = (dateStr: string) => {
   const date = localeDayjs(dateStr)
@@ -124,12 +127,8 @@ export const isAfternoonCell = (cellNumber: number) => {
   return cellNumber % 2 === 1
 }
 
-export const calculateEventStyle = (
-  cellCount: number,
-  isDragging: boolean
-): React.CSSProperties => ({
+export const getEventStyle = (isDragging: boolean): React.CSSProperties => ({
   position: 'absolute',
-  width: `${cellCount * CELL_WIDTH - EVENT_BOX_PADDING}px`,
   height: CELL_HEIGHT - EVENT_BOX_PADDING,
   backgroundColor: '#e3f2fd',
   border: '1px solid #90caf9',
@@ -146,3 +145,46 @@ export const calculateEventStyle = (
   touchAction: 'none',
   userSelect: 'none'
 })
+
+export const getProposedWidth = ({
+  initialWidth,
+  location
+}: {
+  initialWidth: number
+  location: DragLocationHistory
+}) => {
+  const diffX = location.current.input.clientX - location.initial.input.clientX
+  const cellDiff = Math.round(diffX / CELL_WIDTH)
+  const proposedWidth = initialWidth + cellDiff * CELL_WIDTH
+
+  // ensure we don't go below the min or above the max allowed widths
+  return Math.min(
+    Math.max(EVENT_BOX_MIN_WIDTH, proposedWidth),
+    EVENT_BOX_MAX_WIDTH
+  )
+}
+
+export const getNewEventEndTimeFromWidth = ({
+  startTime,
+  width
+}: {
+  startTime: string
+  width: number
+}) => {
+  const cellCount = Math.round((width + EVENT_BOX_PADDING) / CELL_WIDTH)
+  const startPos = getEventPosition(startTime)
+  const startDay = startPos.day
+  const startIsAfternoon = startPos.isAfternoon
+
+  // Calculate end day and period based on cell count
+  const totalHalfDays = cellCount + (startIsAfternoon ? 1 : 0)
+  const endDay = startDay + Math.floor(totalHalfDays / 2)
+  const endIsAfternoon = totalHalfDays % 2 === 1
+
+  return localeDayjs()
+    .date(endDay)
+    .hour(endIsAfternoon ? END_TIME_AFTERNOON : END_TIME_MORNING)
+    .minute(0)
+    .second(0)
+    .format('YYYY-MM-DD HH:mm:ss')
+}

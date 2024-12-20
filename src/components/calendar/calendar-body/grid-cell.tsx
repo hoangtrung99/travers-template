@@ -1,7 +1,7 @@
 import { Box, type BoxProps } from '@mantine/core'
 import { forwardRef } from 'react'
 
-const BorderedBox = forwardRef<
+const GridCell = forwardRef<
   HTMLDivElement,
   { children?: React.ReactNode } & BoxProps
 >(({ children, ...props }, ref) => (
@@ -19,4 +19,4 @@ const BorderedBox = forwardRef<
   </Box>
 ))
 
-export default BorderedBox
+export default GridCell

@@ -9,3 +9,9 @@ export const END_TIME_MORNING = 12
 export const END_TIME_AFTERNOON = 20
 export const CELL_HEIGHT = 88
 export const EVENT_BOX_PADDING = 8
+
+export const DRAG_RESIZE_TYPE = 'resize'
+export const DRAG_MOVE_TYPE = 'move'
+
+export const EVENT_BOX_MIN_WIDTH = 60
+export const EVENT_BOX_MAX_WIDTH = 1000

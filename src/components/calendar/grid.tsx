@@ -1,24 +1,15 @@
-import localeDayjs from '@/lib/dayjs'
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element'
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
-import {
-  dropTargetForElements,
-  monitorForElements
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
-import { Box, Flex, Stack, Text } from '@mantine/core'
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
+import { Box, Stack } from '@mantine/core'
 import { create } from 'mutative'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import BorderedBox from './border-box'
+import { CalendarBody } from './calendar-body/body-row'
 import CalenderHeader from './calendar-header'
-import { CELL_HEIGHT, CELL_TEAM_WIDTH, CELL_WIDTH } from './constants'
-import EventBox from './event-box'
-import EventPreview from './event-preview'
-import { type MachineEvent, teams as mockTeams } from './mock-data'
-import {
-  calculateEventStartPositionByCellNumber,
-  getEventDurationCellCount,
-  getNewEventPosition
-} from './utils'
+import { DRAG_RESIZE_TYPE } from './constants'
+import { teams as mockTeams } from './mock-data'
+import type { MachineEvent } from './types'
+import { getEventDurationCellCount, getNewEventPosition } from './utils'
 
 export default function CalendarGrid() {
   const [teams, setTeams] = useState(mockTeams)
@@ -31,7 +22,7 @@ export default function CalendarGrid() {
       }),
       monitorForElements({
         onDrop: ({ source, location }) => {
-          if (source.data.type === 'divider') return
+          if (source.data.type === DRAG_RESIZE_TYPE) return
 
           const targetData = location.current.dropTargets[0].data
           const event = source.data.event as MachineEvent
@@ -95,7 +86,6 @@ export default function CalendarGrid() {
           <CalendarBody
             key={team.id}
             events={team.events}
-            row={index}
             teamId={team.id}
             teamName={team.name}
           />
@@ -115,148 +105,5 @@ export default function CalendarGrid() {
         </pre>
       </Box>
     </>
-  )
-}
-
-function CalendarBody({
-  events,
-  row,
-  teamId,
-  teamName
-}: {
-  events: MachineEvent[]
-  row: number
-  teamId: string
-  teamName: string
-}) {
-  const days = localeDayjs().daysInMonth()
-  const cellRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [dropTarget, setDropTarget] = useState<{
-    targetCellNumber: number
-    event: MachineEvent
-  } | null>(null)
-
-  useEffect(() => {
-    const cleanups: Array<() => void> = []
-
-    for (const [targetCellNumber, cell] of cellRefs.current.entries()) {
-      if (cell) {
-        cleanups.push(
-          dropTargetForElements({
-            element: cell,
-            onDragEnter: ({ source }) => {
-              const eventData = source.data as { event: MachineEvent }
-
-              if (eventData.event) {
-                setDropTarget({
-                  targetCellNumber,
-                  event: eventData.event
-                })
-              }
-            },
-            onDragLeave: () => {
-              setDropTarget(null)
-            },
-            getData: ({ source }) => {
-              return {
-                ...source,
-                teamId,
-                targetCellNumber
-              }
-            },
-            onDrop: () => {
-              setDropTarget(null)
-            }
-          })
-        )
-      }
-    }
-
-    return () => {
-      for (const cleanup of cleanups) {
-        cleanup()
-      }
-    }
-  }, [teamId])
-
-  return (
-    <Box pos="relative" w="max-content">
-      <Flex>
-        {[...new Array(days + 1).keys()].map((day) => {
-          if (day === 0)
-            return (
-              <BorderedBox
-                miw={CELL_TEAM_WIDTH}
-                key={day}
-                style={{
-                  position: 'sticky',
-                  left: 0,
-                  backgroundColor: 'white',
-                  zIndex: 10000,
-                  borderLeft: '1px solid black'
-                }}
-              >
-                <Text size="sm" p="xs">
-                  {teamName}
-                </Text>
-              </BorderedBox>
-            )
-
-          const cells = [day * 2, day * 2 + 1]
-
-          return (
-            <Flex key={day} miw={160}>
-              <BorderedBox
-                w={CELL_WIDTH}
-                h={CELL_HEIGHT}
-                ref={(el: HTMLDivElement | null) => {
-                  cellRefs.current[cells[0]] = el
-                }}
-              >
-                {cells[0]}
-              </BorderedBox>
-              <BorderedBox
-                w={CELL_WIDTH}
-                h={CELL_HEIGHT}
-                ref={(el: HTMLDivElement | null) => {
-                  cellRefs.current[cells[1]] = el
-                }}
-              >
-                {cells[1]}
-              </BorderedBox>
-            </Flex>
-          )
-        })}
-      </Flex>
-      <Box
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: `${CELL_HEIGHT}px`,
-          pointerEvents: 'none'
-        }}
-      >
-        <Box style={{ pointerEvents: 'auto' }}>
-          {events.map((event) => (
-            <EventBox key={`${event.from}-${event.to}`} event={event} />
-          ))}
-          {dropTarget && (
-            <EventPreview
-              event={dropTarget.event}
-              style={{
-                position: 'absolute',
-                left: calculateEventStartPositionByCellNumber(
-                  dropTarget.targetCellNumber
-                ),
-                opacity: 0.7,
-                pointerEvents: 'none'
-              }}
-            />
-          )}
-        </Box>
-      </Box>
-    </Box>
   )
 }

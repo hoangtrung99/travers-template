@@ -1,8 +1,8 @@
 import { Box, Text } from '@mantine/core'
-import { CELL_HEIGHT, CELL_WIDTH } from './constants'
-import { EVENT_BOX_PADDING } from './constants'
-import type { MachineEvent } from './mock-data'
-import { getEventDurationCellCount } from './utils'
+import { CELL_HEIGHT, CELL_WIDTH } from '../constants'
+import { EVENT_BOX_PADDING } from '../constants'
+import type { MachineEvent } from '../types'
+import { getEventDurationCellCount } from '../utils'
 
 const EventPreview = ({
   event,
@@ -34,4 +34,4 @@ const EventPreview = ({
   )
 }
 
-export default EventPreview
+export { EventPreview }

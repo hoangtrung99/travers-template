@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { CalendarBody } from './calendar-body/body-row'
 import CalenderHeader from './calendar-header'
 import { DRAG_RESIZE_TYPE } from './constants'
-import { teams as mockTeams } from './mock-data'
+import { allTeams as mockTeams } from './mock-data'
 import type { MachineEvent } from './types'
 import { getEventDurationCellCount, getNewEventPosition } from './utils'
 

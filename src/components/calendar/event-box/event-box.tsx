@@ -1,19 +1,22 @@
 import { Box, Divider, Flex, Text } from '@mantine/core'
 import { useAtomValue } from 'jotai'
 import { useRef } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 import { eventAtom, eventStyleAtom, previewContainerAtom } from './atom'
 import { EventPreview } from './event-preview'
 import { useDragHandler } from './hooks/useDragHandler'
 import { useResizeHandler } from './hooks/useResizeHandler'
 
-const EventBox = () => {
+const EventBoxInner = () => {
   const event = useAtomValue(eventAtom)
   const ref = useRef<HTMLDivElement>(null)
   const dividerRef = useRef<HTMLDivElement>(null)
 
   const previewContainer = useAtomValue(previewContainerAtom)
   const eventStyle = useAtomValue(eventStyleAtom)
+
+  console.log('event box', event)
 
   useDragHandler(ref)
   useResizeHandler(dividerRef, ref)
@@ -47,4 +50,4 @@ const EventBox = () => {
   )
 }
 
-export { EventBox }
+export const EventBox = React.memo(EventBoxInner)

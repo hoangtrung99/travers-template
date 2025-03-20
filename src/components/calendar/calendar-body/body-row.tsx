@@ -3,7 +3,7 @@ import localeDayjs from '@/lib/dayjs'
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { Box, Flex, Text } from '@mantine/core'
 import { Provider } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CELL_HEIGHT, CELL_TEAM_WIDTH } from '../constants'
 import { EventBox, EventPreview } from '../event-box'
 import { eventAtom } from '../event-box/atom'
@@ -18,7 +18,11 @@ interface CalendarBodyProps {
   teamName: string
 }
 
-export function CalendarBody({ events, teamId, teamName }: CalendarBodyProps) {
+export function CalendarBodyInner({
+  events,
+  teamId,
+  teamName
+}: CalendarBodyProps) {
   const days = localeDayjs().daysInMonth()
   const cellRefs = useRef<(HTMLDivElement | null)[]>([])
   const [dropTarget, setDropTarget] = useState<{
@@ -131,3 +135,5 @@ export function CalendarBody({ events, teamId, teamName }: CalendarBodyProps) {
     </Box>
   )
 }
+
+export const CalendarBody = React.memo(CalendarBodyInner)
